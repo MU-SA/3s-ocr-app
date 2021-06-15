@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "758833550311",
+    "project_id": "strial-2ccce",
+    "storage_bucket": "strial-2ccce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758833550311:android:e32f972b8860a223c02342",
+        "android_client_info": {
+          "package_name": "com.strial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758833550311-svn9o3qfsh0hedi66ffk6gm1esh6vbl9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.strial",
+            "certificate_hash": "f5c9c39083a6c03ff0c5270cddd9c74017e56963"
+          }
+        },
+        {
+          "client_id": "758833550311-p7nskhsc25bicq09g0r3f1ru7hslik4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHGCfXe8zG4iev0HTPs7y7EZBRax7D404"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "758833550311-p7nskhsc25bicq09g0r3f1ru7hslik4s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

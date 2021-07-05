@@ -15,11 +15,16 @@ export default ({}) => {
   const [canDetectText, toggleTextDetection] = useState(false);
   const [buttonText, setButtonText] = useState('');
   const [email, setEmail] = useState('');
+  const [barCode, setBarCode] = useState('');
   const camera = useRef();
   const backgroundStyle = {flex: 1, flexGrow: 1};
   const textRecognized = ({textBlocks}) => {
     try {
-      if (textBlocks) setOcrElement(textBlocks);
+      if (textBlocks) {
+        setOcrElement(textBlocks);
+      } else {
+        console.log(textBlocks);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -33,7 +38,6 @@ export default ({}) => {
     } else {
       let body = '';
       ocrElement.map(block => {
-        console.log(block);
         body += block.value + '\n';
       });
       const query = `mailto:<${email}>?subject=Text scanned from my camera&body=${body}`;
@@ -45,6 +49,13 @@ export default ({}) => {
     setOcrElement([]);
     toggleTextDetection(false);
     setButtonText('');
+  };
+
+  const onBarCodeDetected = e => {
+    setOcrElement([
+      ...ocrElement,
+      {...e, value: '*****Bar Code Detected***\n\t\t' + e.data},
+    ]);
   };
   const renderTextBlocks = () => (
     <View style={styles.textRecognitionContainer}>
@@ -69,10 +80,11 @@ export default ({}) => {
       <RNCamera
         onTextRecognized={canDetectText ? textRecognized : null}
         ref={camera}
-        onBarCodeRead={e => setOcrElement(e.data)}
+        onBarCodeRead={canDetectText ? onBarCodeDetected : null}
         captureAudio={false}
         style={styles.camera}
       />
+      {barCode ? <Text>Bar Code Detected : {barCode}</Text> : null}
       {renderTextBlocks()}
       <View style={styles.buttons}>
         <Pressable onPress={onTogglePressed} style={styles.button}>

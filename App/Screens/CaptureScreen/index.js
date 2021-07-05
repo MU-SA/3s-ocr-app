@@ -18,7 +18,11 @@ export default ({}) => {
   const camera = useRef();
   const backgroundStyle = {flex: 1, flexGrow: 1};
   const textRecognized = ({textBlocks}) => {
-    setOcrElement(textBlocks);
+    try {
+      if (textBlocks) setOcrElement(textBlocks);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const onTogglePressed = () => {
     if (ocrElement.length === 0 && !canDetectText) {

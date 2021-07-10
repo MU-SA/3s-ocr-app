@@ -34,6 +34,7 @@ export default ({}) => {
     }
   };
 
+  
   const onTogglePressed = () => {
     if (ocrElement.length === 0 && !canDetectText) {
       toggleTextDetection(!canDetectText);

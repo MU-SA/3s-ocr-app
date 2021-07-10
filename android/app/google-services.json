@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:758833550311:android:e32f972b8860a223c02342",
         "android_client_info": {
-          "package_name": "com.strial"
+          "package_name": "com.ocr.threes"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "758833550311-svn9o3qfsh0hedi66ffk6gm1esh6vbl9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.strial",
+            "package_name": "com.ocr.threes",
             "certificate_hash": "f5c9c39083a6c03ff0c5270cddd9c74017e56963"
           }
         },

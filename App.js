@@ -18,8 +18,10 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
   webClientId:
-    '758833550311-p7nskhsc25bicq09g0r3f1ru7hslik4s.apps.googleusercontent.com',
+    '18444436630-1ghf56bfler2tqi0qoacjtbheft0n95i.apps.googleusercontent.com',
   forceCodeForRefreshToken: true,
+  androidClientId:
+    '18444436630-c6n2lcpvtv8qlra2l345amgtk3ga0aba.apps.googleusercontent.com',
 
   offlineAccess: true,
 });

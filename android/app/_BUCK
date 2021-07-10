@@ -35,12 +35,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.strial",
+    package = "com.ocr.threes",
 )
 
 android_resource(
     name = "res",
-    package = "com.strial",
+    package = "com.ocr.threes",
     res = "src/main/res",
 )
 

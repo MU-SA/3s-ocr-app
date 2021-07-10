@@ -1,4 +1,5 @@
 import {
+  Alert,
   Linking,
   Pressable,
   SafeAreaView,
@@ -12,10 +13,13 @@ import styles from './styles';
 import Storage from '../../Helpers/Storage';
 export default ({}) => {
   const [ocrElement, setOcrElement] = useState([]);
+  const [barcode, setBarcode] = useState([]);
   const [canDetectText, toggleTextDetection] = useState(false);
   const [buttonText, setButtonText] = useState('');
+  const [DetectedChargeText, setDetectedChargeText] = useState('');
+  const [DetectedChargeTxt, setDetectedChargeTxt] = useState(false);
   const [email, setEmail] = useState('');
-  const [barCode, setBarCode] = useState('');
+  const [barCode, setBarCodes] = useState('');
   const camera = useRef();
   const backgroundStyle = {flex: 1, flexGrow: 1};
   const textRecognized = ({textBlocks}) => {
@@ -23,16 +27,18 @@ export default ({}) => {
       if (textBlocks) {
         setOcrElement(textBlocks);
       } else {
-        console.log(textBlocks);
+        // console.log(textBlocks);
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
+
   const onTogglePressed = () => {
     if (ocrElement.length === 0 && !canDetectText) {
       toggleTextDetection(!canDetectText);
     } else if (ocrElement.length > 0 && canDetectText) {
+      console.log('ocrElement' + ocrElement);
       toggleTextDetection(false);
       setButtonText('Send using email');
     } else {
@@ -40,9 +46,12 @@ export default ({}) => {
       ocrElement.map(block => {
         body += block.value + '\n';
       });
-      const query = `mailto:<${email}>?subject=Text scanned from my camera&body=${body}`;
+
+      const query = `mailto:<${email}>?subject=Text scanned from my camera&body= pin code: ${DetectedChargeText} bar code: ${DetectedChargeText} `;
       const canOpen = Linking.canOpenURL(query);
-      if (canOpen) Linking.openURL(query);
+      if (canOpen) {
+        Linking.openURL(query);
+      }
     }
   };
   const reset = () => {
@@ -52,24 +61,80 @@ export default ({}) => {
   };
 
   const onBarCodeDetected = e => {
-    setOcrElement([
-      ...ocrElement,
-      {...e, value: '*****Bar Code Detected***\n\t\t' + e.data},
-    ]);
+    // setOcrElement([
+    //   ...ocrElement,
+    //   {...e, value: '*****Bar Code Detected***\n\t\t' + e.data},
+    // ]);
+    setBarCodes(e.data);
+    toggleTextDetection(false);
+    // Alert.alert(barcode);
   };
-  const renderTextBlocks = () => (
-    <View style={styles.textRecognitionContainer}>
-      <ScrollView pointerEvents="none">
-        {ocrElement.map(renderTextBlock)}
-      </ScrollView>
-    </View>
-  );
 
-  const renderTextBlock = ({bounds, value}) => (
-    <View key={value + bounds.origin.x}>
-      <Text style={styles.detectedTextColor}>{value}</Text>
-    </View>
-  );
+  const onTextDetected = ({textBlocks}) => {
+    try {
+      if (textBlocks) {
+        console.log(textBlocks);
+        setOcrElement(textBlocks);
+        textBlocks.map((bounds, value) =>
+          textBlocks[value].value.startsWith('Scratch here')
+            ? setDetectedChargeText(
+                textBlocks[value].value.replace(/[^0-9\s]/g, ''),
+              )
+            : null,
+        );
+      } else {
+        console.log(textBlocks);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // setOcrElement([
+    //   ...ocrElement,
+    //   {...e, value: '*****Bar Code Detected***\n\t\t' + e.data},
+    // ]);
+    // setBarcode(e.data);
+    // toggleTextDetection(false);
+    // Alert.alert(barcode);
+  };
+
+  var regexp =
+    /^( ?:([0-9]{3} (?:[0-9]{4}) (?:[0-9]{3}) (?:[0-9]{4}) (?:[0-9]{3}) ))$/;
+
+  // const renderTextBlocks = () => (
+  //   <View style={styles.textRecognitionContainer}>
+  //     <ScrollView pointerEvents="none">
+  //       {!DetectedChargeText ? ocrElement.map(renderTextBlock) : null}
+  //     </ScrollView>
+  //   </View>
+  // );
+
+  useEffect(() => {
+    if (barCode !== '' && DetectedChargeText !== '') {
+      Alert.alert('barcode' + barCode + '\\n Pin code' + DetectedChargeText);
+    }
+  }, [barCode, DetectedChargeText]);
+  const renderTextBlock = ({bounds, value}) => {
+    value.startsWith('Scratch here')
+      ? setDetectedChargeText(value.replace(/[^0-9\s]/g, ''))
+      : null;
+  };
+  // <View key={value + bounds.origin.x}>
+  //   <Text style={styles.detectedTextColor}>
+  //     {/* {console.log(
+  //       'value >> ' + value.startsWith('Scratch here')
+  //         ? value.replace(/[^0-9\s]/g, '')
+  //         : '',
+  //     )} */}
+
+  //     {/* {value.startsWith('Scratch here') ? {setDetectedChargeText(true)} : ''} */}
+
+  //     {/* {regexp.test(value.replace(/[^0-9\s]/g, '')) ? value : 'not yet'} */}
+  //     {value.startsWith('Scratch here') ? value.replace(/[^0-9\s]/g, '') : ''}
+  //     {barcode}
+  //     {/* {ocrElement} */}
+  //   </Text>
+  // </View>
   const getData = async () => {
     setEmail(await Storage.getFriendEmail());
   };
@@ -78,14 +143,28 @@ export default ({}) => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <RNCamera
-        onTextRecognized={canDetectText ? textRecognized : null}
+        onTextRecognized={
+          canDetectText && DetectedChargeText === '' ? onTextDetected : null
+        }
         ref={camera}
         onBarCodeRead={canDetectText ? onBarCodeDetected : null}
         captureAudio={false}
         style={styles.camera}
       />
-      {barCode ? <Text>Bar Code Detected : {barCode}</Text> : null}
-      {renderTextBlocks()}
+      <View style={{height: '40%'}}>
+        {barCode ? (
+          <Text style={{fontWeight: 'bold'}}>
+            Bar Code Detected : {barCode}
+          </Text>
+        ) : null}
+        {DetectedChargeText ? (
+          <Text style={{fontWeight: 'bold'}}>
+            PIN Detected : {DetectedChargeText}
+          </Text>
+        ) : null}
+      </View>
+      {/* {renderTextBlocks()} */}
+
       <View style={styles.buttons}>
         <Pressable onPress={onTogglePressed} style={styles.button}>
           <Text style={styles.buttonText}>

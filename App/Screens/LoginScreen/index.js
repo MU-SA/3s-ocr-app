@@ -11,16 +11,12 @@ export default ({}) => {
   const navigation = useNavigation();
   const onSignInPressed = async () => {
     const isLogged = await GoogleSignIn();
-    if (isLogged) {
-      navigation.navigate('App');
-    }
+    if (isLogged) navigation.navigate('App');
   };
 
   const checkIsSigned = async () => {
     const isSigned = await GoogleSignin.isSignedIn();
-    if (isSigned) {
-      navigation.navigate('HomeScreen');
-    }
+    if (isSigned) navigation.navigate('HomeScreen');
     console.log(isSigned);
   };
   useEffect(() => checkIsSigned(), []);

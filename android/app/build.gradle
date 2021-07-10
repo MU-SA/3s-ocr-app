@@ -132,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.ocr.threes"
+        applicationId "com.strial"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,4 +1,4 @@
-package com.ocr.threes;
+package com.strial;
 
 import com.facebook.react.ReactActivity;
 
